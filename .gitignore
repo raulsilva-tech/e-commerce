@@ -1,0 +1,17 @@
+# Go
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+vendor/
+*.test
+# VSCode
+.vscode/
+# Docker
+*.env
+# Terraform
+.terraform/
+*.tfstate*
+# IDE/editor
+.idea/
