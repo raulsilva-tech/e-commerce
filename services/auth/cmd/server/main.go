@@ -1,18 +1,73 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
+	"github.com/raulsilva-tech/e-commerce/services/auth/internal/db"
+	"github.com/raulsilva-tech/e-commerce/services/auth/internal/server"
 )
 
 func main() {
 
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok"))
+	cfg := server.Config{
+		Port:            getEnv("AUTH_PORT", "8080"),
+		DatabaseDSN:     getEnv("POSTGRES_DSN", "postgres://postgres:postgres@postgres:5432/appdb?sslmode=disable"),
+		RedisAddr:       getEnv("REDIS_ADDR", "redis:6379"),
+		JWTSecret:       getEnv("JWT_SECRET", "change-me-in-prod"),
+		AccessTokenTTL:  time.Minute * 15,
+		RefreshTokenTTL: time.Hour * 24 * 7,
+	}
 
-	})
+	dbConn, err := sqlx.Connect("postgres", cfg.DatabaseDSN)
+	if err != nil {
+		log.Fatalf("failed to connect db: %v", err)
+	}
+	defer dbConn.Close()
 
-	log.Println("Auth service running on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	repo := db.NewUserRepository(dbConn)
+	handler, err := server.NewServer(cfg, repo)
+	if err != nil {
+		log.Fatalf("failed to create server: %v", err)
+	}
+
+	srv := &http.Server{
+		Addr:    ":" + cfg.Port,
+		Handler: handler,
+	}
+
+	go func() {
+		log.Printf("Auth service running on :%s", cfg.Port)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %v", err)
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	log.Println("Shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatalf("Server forced to shutdown: %v", err)
+	}
+
+	log.Println("Server exiting")
+
+}
+
+func getEnv(key, def string) string {
+
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+	return def
 }
