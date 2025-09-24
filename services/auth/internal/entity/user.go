@@ -38,11 +38,18 @@ func NewUser(id int64, name, email, password string, createdAt time.Time) (*User
 		Password:  string(hashed),
 		CreatedAt: createdAt,
 	}
-
-	return u, u.Validate()
+	err = u.Validate()
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
 }
 
 func (u *User) Validate() error {
+
+	if u.ID == 0 {
+		return ErrIdIsRequired
+	}
 
 	if u.Name == "" {
 		return ErrNameIsRequired
