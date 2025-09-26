@@ -23,14 +23,14 @@ func TestNewUserWhenNameIsRequired(t *testing.T) {
 
 	assert.NotNil(t, err)
 	assert.Nil(t, u)
-	assert.Equal(t,err,ErrNameIsRequired)
+	assert.Equal(t, err, ErrNameIsRequired)
 }
 
-func TestNewUserWhenIdIsRequired(t *testing.T) {
+func TestNewUserWhenEmailIsRequired(t *testing.T) {
 
-	u, err := NewUser(0, "Raul", "raul@gmail.com", "", time.Now())
+	u, err := NewUser(1, "Raul", "", "", time.Now())
 
 	assert.NotNil(t, err)
 	assert.Nil(t, u)
-	assert.Equal(t,err,ErrIdIsRequired)
+	assert.Equal(t, err, ErrEmailIsRequired)
 }
