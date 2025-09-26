@@ -47,10 +47,6 @@ func NewUser(id int64, name, email, password string, createdAt time.Time) (*User
 
 func (u *User) Validate() error {
 
-	if u.ID == 0 {
-		return ErrIdIsRequired
-	}
-
 	if u.Name == "" {
 		return ErrNameIsRequired
 	}

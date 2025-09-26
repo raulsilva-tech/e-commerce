@@ -10,17 +10,21 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	"github.com/raulsilva-tech/e-commerce/services/auth/config"
 	"github.com/raulsilva-tech/e-commerce/services/auth/internal/db"
-	"github.com/raulsilva-tech/e-commerce/services/auth/internal/server"
+	"github.com/raulsilva-tech/e-commerce/services/auth/internal/grpc"
+	"github.com/raulsilva-tech/e-commerce/services/auth/internal/usecase"
+	"github.com/raulsilva-tech/e-commerce/services/auth/internal/webserver"
 )
 
 func main() {
 
-	cfg := server.Config{
-		Port:            getEnv("AUTH_PORT", "8080"),
-		DatabaseDSN:     getEnv("POSTGRES_DSN", "postgres://postgres:postgres@postgres:5432/appdb?sslmode=disable"),
+	cfg := config.Config{
+		WebServerPort:   getEnv("WEBSERVER_PORT", "8080"),
+		DatabaseDSN:     getEnv("DATABASE_DSN", "postgres://postgres:postgres@localhost:5432/appdb?sslmode=disable"),
 		RedisAddr:       getEnv("REDIS_ADDR", "redis:6379"),
 		JWTSecret:       getEnv("JWT_SECRET", "change-me-in-prod"),
+		GRPCServerPort:  getEnv("GRPCSERVER_PORT", "50051"),
 		AccessTokenTTL:  time.Minute * 15,
 		RefreshTokenTTL: time.Hour * 24 * 7,
 	}
@@ -32,18 +36,25 @@ func main() {
 	defer dbConn.Close()
 
 	repo := db.NewUserRepository(dbConn)
-	handler, err := server.NewServer(cfg, repo)
+	uc := usecase.NewAuthUseCase(repo)
+
+	//grpc server
+	grpcService := grpc.NewAuthService(*uc)
+	go grpcService.StartGRPCServer(cfg.GRPCServerPort)
+
+	//web server
+	handler, err := webserver.NewServer(cfg, *uc)
 	if err != nil {
 		log.Fatalf("failed to create server: %v", err)
 	}
 
 	srv := &http.Server{
-		Addr:    ":" + cfg.Port,
+		Addr:    ":" + cfg.WebServerPort,
 		Handler: handler,
 	}
 
 	go func() {
-		log.Printf("Auth service running on :%s", cfg.Port)
+		log.Printf("Auth webserver running on :%s", cfg.WebServerPort)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %v", err)
 		}
