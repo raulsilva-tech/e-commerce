@@ -1,0 +1,27 @@
+### signup request
+POST http://localhost:8080/signup 
+Content-Type: application/json
+
+{"name":"name","email":"user@example.com","password":"secret"}
+
+### access token request
+POST http://localhost:8080/oauth/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&username=user@example.com&password=secret
+
+### refresh token
+POST http://localhost:8080/oauth/token 
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&refresh_token=7gTeksUgOiCH5HFncT8-Uqel9TIb5e97qHIkbfBjBrM
+
+### test protected endpoint with token
+GET http://localhost:8080/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsImV4cCI6MTc1ODI5MzMwMywiaWF0IjoxNzU4MjkyNDAzLCJzdWIiOiIyIn0.N0NO-7KXbnibi94N0KNdTKXkTi598PymkHqBJ9tfBug
+
+### logout request
+POST http://localhost:8080/logout
+Content-Type: application/json
+
+{"refresh_token":"yV7C56bZctcaRLWJAawU1FvzTs2dAlruQNMN9hXnR_U"}
