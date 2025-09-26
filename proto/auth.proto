@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "github.com/raulsilva-tech/e-commerce/services/auth/pb";
+
+
+service AuthService{
+    rpc Signup (SignupRequest) returns (SignupResponse);
+    rpc Login (LoginRequest) returns (LoginResponse);
+    rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+message SignupRequest{
+  string name = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message SignupResponse{
+  string user_id = 1;
+  string email = 2;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  bool valid = 1;
+  string user_id = 2;
+}
