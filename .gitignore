@@ -16,3 +16,4 @@ vendor/
 # IDE/editor
 .idea/
 notes.txt
+test/

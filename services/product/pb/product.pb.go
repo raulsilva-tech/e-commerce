@@ -75,7 +75,7 @@ func (x *CreateProductRequest) GetPrice() float64 {
 
 type CreateProductResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProductId     string                 `protobuf:"bytes,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -110,16 +110,16 @@ func (*CreateProductResponse) Descriptor() ([]byte, []int) {
 	return file_proto_product_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateProductResponse) GetProductId() string {
+func (x *CreateProductResponse) GetId() string {
 	if x != nil {
-		return x.ProductId
+		return x.Id
 	}
 	return ""
 }
 
 type GetProductRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProductId     string                 `protobuf:"bytes,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -154,16 +154,16 @@ func (*GetProductRequest) Descriptor() ([]byte, []int) {
 	return file_proto_product_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetProductRequest) GetProductId() string {
+func (x *GetProductRequest) GetId() string {
 	if x != nil {
-		return x.ProductId
+		return x.Id
 	}
 	return ""
 }
 
 type GetProductResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProductId     string                 `protobuf:"bytes,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Price         float64                `protobuf:"fixed64,3,opt,name=price,proto3" json:"price,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -200,9 +200,9 @@ func (*GetProductResponse) Descriptor() ([]byte, []int) {
 	return file_proto_product_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetProductResponse) GetProductId() string {
+func (x *GetProductResponse) GetId() string {
 	if x != nil {
-		return x.ProductId
+		return x.Id
 	}
 	return ""
 }
@@ -308,16 +308,13 @@ const file_proto_product_proto_rawDesc = "" +
 	"\x13proto/product.proto\x12\aproduct\"@\n" +
 	"\x14CreateProductRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
-	"\x05price\x18\x02 \x01(\x01R\x05price\"6\n" +
-	"\x15CreateProductResponse\x12\x1d\n" +
-	"\n" +
-	"product_id\x18\x01 \x01(\tR\tproductId\"2\n" +
-	"\x11GetProductRequest\x12\x1d\n" +
-	"\n" +
-	"product_id\x18\x01 \x01(\tR\tproductId\"]\n" +
-	"\x12GetProductResponse\x12\x1d\n" +
-	"\n" +
-	"product_id\x18\x01 \x01(\tR\tproductId\x12\x12\n" +
+	"\x05price\x18\x02 \x01(\x01R\x05price\"'\n" +
+	"\x15CreateProductResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"#\n" +
+	"\x11GetProductRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"N\n" +
+	"\x12GetProductResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
 	"\x05price\x18\x03 \x01(\x01R\x05price\"\x15\n" +
 	"\x13ListProductsRequest\"O\n" +
