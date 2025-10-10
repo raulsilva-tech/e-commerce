@@ -18,19 +18,19 @@ func NewOrderUseCase(r *repository.OrderRepository, p *kafka.Writer) *OrderUseCa
 	return &OrderUseCase{repo: r, producer: p}
 }
 
-func (uc *OrderUseCase) CreateOrder(ctx context.Context, productID int64, quantity int, total float64) (int64, error) {
+func (uc *OrderUseCase) CreateOrder(ctx context.Context, productID int64, quantity int, total float64) error {
 	order, err := entity.NewOrder(0, productID, quantity, total)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	if err := uc.repo.Create(order); err != nil {
-		return 0, err
+		return err
 	}
 
 	if err := producer.PublishOrderCreated(ctx, uc.producer, order.ID); err != nil {
-		return 0, err
+		return err
 	}
 
-	return order.ID, nil
+	return nil
 }

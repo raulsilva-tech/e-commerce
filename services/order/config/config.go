@@ -10,4 +10,5 @@ type Config struct {
 	AccessTokenTTL  time.Duration
 	RefreshTokenTTL time.Duration
 	GRPCServerPort  string
+	KafkaAddr       string
 }

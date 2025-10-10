@@ -12,7 +12,7 @@ func NewProducer(broker string) *kafka.Writer {
 
 	return &kafka.Writer{
 		Addr:     kafka.TCP(broker),
-		Topic:    "order_created",
+		Topic:    "orders",
 		Balancer: &kafka.LeastBytes{},
 	}
 

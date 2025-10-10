@@ -14,7 +14,7 @@ func NewOrderRepository(db *sqlx.DB) *OrderRepository {
 }
 
 func (r *OrderRepository) Create(order *entity.Order) error {
-	_, err := r.db.Exec("INSERT INTO orders (id, product_id, quantity, total) VALUES ($1, $2, $3, $4)",
-		order.ID, order.ProductID, order.Quantity, order.Total)
+	_, err := r.db.Exec("INSERT INTO orders (product_id, quantity, total) VALUES ($1, $2, $3)",
+		order.ProductID, order.Quantity, order.Total)
 	return err
 }

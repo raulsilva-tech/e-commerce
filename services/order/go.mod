@@ -4,6 +4,7 @@ go 1.25.1
 
 require (
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/gorilla/mux v1.8.1
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/segmentio/kafka-go v0.4.49
