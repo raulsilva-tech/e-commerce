@@ -44,5 +44,4 @@ func (ur *UserRepository) GetByEmail(email string) (*entity.User, error) {
 		}
 	}
 	return &user, nil
-
 }

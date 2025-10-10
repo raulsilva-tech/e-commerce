@@ -10,6 +10,24 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+func migrateDB() (*sqlx.DB, error) {
+
+	db, err := sqlx.Open("sqlite3", ":memory:")
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = db.Exec(`CREATE TABLE users (
+    id integer PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    created_at DATETIME
+);`)
+
+	return db, err
+}
+
 type UserRepositoryTestSuite struct {
 	DB *sqlx.DB
 	suite.Suite
@@ -55,22 +73,4 @@ func (suite *UserRepositoryTestSuite) TestGetByEmail() {
 	suite.NotNil(u2)
 	suite.Equal(u.ID, u2.ID)
 
-}
-
-func migrateDB() (*sqlx.DB, error) {
-
-	db, err := sqlx.Open("sqlite3", ":memory:")
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = db.Exec(`CREATE TABLE users (
-    id integer PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    created_at DATETIME
-);`)
-
-	return db, err
 }

@@ -3,7 +3,7 @@ package usecase
 import (
 	"time"
 
-	"github.com/raulsilva-tech/e-commerce/services/auth/internal/db"
+	"github.com/raulsilva-tech/e-commerce/services/auth/internal/repository"
 	"github.com/raulsilva-tech/e-commerce/services/auth/internal/entity"
 	"golang.org/x/crypto/bcrypt"
 )

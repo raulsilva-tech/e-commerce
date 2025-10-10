@@ -15,15 +15,15 @@ message CreateProductRequest {
 }
 
 message CreateProductResponse {
-  string product_id = 1;
+  string id = 1;
 }
 
 message GetProductRequest {
-  string product_id = 1;
+  string id = 1;
 }
 
 message GetProductResponse {
-  string product_id = 1;
+  string id = 1;
   string name = 2;
   double price = 3;
 }

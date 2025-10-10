@@ -11,8 +11,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/raulsilva-tech/e-commerce/services/auth/config"
-	"github.com/raulsilva-tech/e-commerce/services/auth/internal/db"
 	"github.com/raulsilva-tech/e-commerce/services/auth/internal/grpc"
+	db "github.com/raulsilva-tech/e-commerce/services/auth/internal/repository"
 	"github.com/raulsilva-tech/e-commerce/services/auth/internal/usecase"
 	"github.com/raulsilva-tech/e-commerce/services/auth/internal/webserver"
 )
@@ -21,8 +21,8 @@ func main() {
 
 	cfg := config.Config{
 		WebServerPort:   getEnv("WEBSERVER_PORT", "8080"),
-		DatabaseDSN:     getEnv("DATABASE_DSN", "postgres://postgres:postgres@localhost:5432/appdb?sslmode=disable"),
-		RedisAddr:       getEnv("REDIS_ADDR", "redis:6379"),
+		DatabaseDSN:     getEnv("DATABASE_DSN", "postgres://postgres:postgres@localhost:5433/ecommerce?sslmode=disable"),
+		RedisAddr:       getEnv("REDIS_ADDR", "localhost:6379"),
 		JWTSecret:       getEnv("JWT_SECRET", "change-me-in-prod"),
 		GRPCServerPort:  getEnv("GRPCSERVER_PORT", "50051"),
 		AccessTokenTTL:  time.Minute * 15,

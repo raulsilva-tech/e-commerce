@@ -18,19 +18,19 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-type AuthService struct {
+type AuthServer struct {
 	pb.UnimplementedAuthServiceServer
 	AuthUseCase usecase.AuthUseCase
 	cfg         config.Config
 }
 
-func NewAuthService(uc usecase.AuthUseCase) *AuthService {
-	return &AuthService{
+func NewAuthService(uc usecase.AuthUseCase) *AuthServer {
+	return &AuthServer{
 		AuthUseCase: uc,
 	}
 }
 
-func (s *AuthService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
+func (s *AuthServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
 
 	user, err := s.AuthUseCase.Login(usecase.LoginInput{Email: in.Email, Password: in.Password})
 	if err != nil {
@@ -53,7 +53,7 @@ func (s *AuthService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 	}, nil
 }
 
-func (s *AuthService) Signup(ctx context.Context, in *pb.SignupRequest) (*pb.SignupResponse, error) {
+func (s *AuthServer) Signup(ctx context.Context, in *pb.SignupRequest) (*pb.SignupResponse, error) {
 
 	id, err := s.AuthUseCase.Signup(usecase.SignupInput{Name: in.Name, Email: in.Email, Password: in.Password})
 	if err != nil {
@@ -66,16 +66,14 @@ func (s *AuthService) Signup(ctx context.Context, in *pb.SignupRequest) (*pb.Sig
 	}, nil
 }
 
-func (s *AuthService) StartGRPCServer(port string) error {
+func (s *AuthServer) StartGRPCServer(port string) error {
 
 	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		return fmt.Errorf("failed to listen %w", err)
 	}
 
-	grpcServer := grpc.NewServer(
-	// grpc.UnaryInterceptor(UnaryServerInterceptorJWT),
-	)
+	grpcServer := grpc.NewServer()
 
 	pb.RegisterAuthServiceServer(grpcServer, s)
 	reflection.Register(grpcServer)
